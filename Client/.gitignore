@@ -23,3 +23,9 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+<<<<<<< HEAD:Client/.gitignore
+=======
+
+
+.env
+>>>>>>> back/dev:Api/.gitignore
