@@ -1,7 +1,6 @@
 import Productos from "../models/Productos.js";
 import Company from "../models/Company.js";
 
-
 export const postProducto = async (req, res) => {
     try{
 

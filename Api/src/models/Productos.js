@@ -16,7 +16,6 @@ import mongoose from "mongoose";
 }
 */
 
-
 const productosSchema = new mongoose.Schema({
     productoname: {
         type: String,

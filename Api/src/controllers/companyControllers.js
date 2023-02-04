@@ -3,7 +3,6 @@ import { encrypt, compare } from "../helpers/bCrypt.js";
 import { tokenSign } from "../helpers/generadorDeToken.js";
 
 
-
 export const postCompany = async (req, res) => {
     try {
         function random(min, max) {
