@@ -15,7 +15,14 @@ const userSchema = new mongoose.Schema({
     passwordCPU:{
         type:String,
         required:true
-    }
+    },
+    companies: [
+        {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Company",
+          autopopulate: true,
+        },
+      ],
 })
 
 

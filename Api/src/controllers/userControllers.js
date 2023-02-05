@@ -24,7 +24,9 @@ export const postUser = async (req, res) => {
         })
         return res.status(200).json("Usuario creado satisfactoriamente")
     } catch (e) {
-        return res.json({ msg: `Error - ${e}` })
+        console.log(req.body)
+        console.log("e",e)
+        return res.status(400).json({ msg: `Error - ${e}` })
     }
 }
 
@@ -40,7 +42,7 @@ export const loginUser = async (req, res) => {
         if(!checkPassword) {
             return res.status(401).json({ msg: "Contraseña invalida" })
         }
-        return res.status(200).send(`Login exitoso! token: ${tokenSession}`)
+        return res.status(200).send(tokenSession)
     } catch(e) {
         return res.json({ msg: `Error - ${e}` })
     }
