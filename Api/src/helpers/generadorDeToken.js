@@ -8,7 +8,7 @@ export const tokenSign = async (user) => {
             username: user.username,
             pcpu:user.passwordCPU
         },
-        "ak14",
+        process.env.TOKEN_JWT,
         {
             expiresIn: "2h",
         }
