@@ -14,6 +14,11 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import MailIcon from "@mui/icons-material/Mail";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import MoreIcon from "@mui/icons-material/MoreVert";
+import logo from '../imgs/logo.png'
+import { isExpired, decodeToken } from "react-jwt";
+import LoadingButton from "@mui/lab/LoadingButton";
+import { Button, Stack } from "@mui/material";
+import { Link, redirect } from "react-router-dom";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -55,7 +60,9 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-export default function PrimarySearchAppBar() {
+export default function NavBarComponent() {
+  const myDecodedToken = decodeToken(localStorage.getItem('userloda'))
+  console.log('myDecodedToken',myDecodedToken)
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
@@ -98,6 +105,8 @@ export default function PrimarySearchAppBar() {
     >
       <MenuItem onClick={handleMenuClose}>PERFIL</MenuItem>
       <MenuItem onClick={handleMenuClose}>CONFIGURACION</MenuItem>
+      <MenuItem onClick={handleMenuClose}>CREAR EMPRESA</MenuItem>
+      <MenuItem onClick={()=>{localStorage.removeItem('userloda');handleMenuClose();window.location.reload()}}>CERRAR SESSION</MenuItem>
     </Menu>
   );
 
@@ -118,6 +127,8 @@ export default function PrimarySearchAppBar() {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
+      {(myDecodedToken+''!== 'null')?
+      <>
       <MenuItem>
         <IconButton size="large" aria-label="show 4 new mails" color="inherit">
           <Badge badgeContent={0} color="error">
@@ -131,7 +142,7 @@ export default function PrimarySearchAppBar() {
           size="large"
           aria-label="show 17 new notifications"
           color="inherit"
-        >
+          >
           <Badge badgeContent={0} color="error">
             <NotificationsIcon />
           </Badge>
@@ -145,11 +156,26 @@ export default function PrimarySearchAppBar() {
           aria-controls="primary-search-account-menu"
           aria-haspopup="true"
           color="inherit"
-        >
+          >
           <AccountCircle />
         </IconButton>
         <p>Profile</p>
       </MenuItem>
+            </>
+      :
+      <Stack direction="column" spacing={2}>
+        <Link to='/login'style={{ textDecoration: "none" }}>
+      <Button variant="outlined" style={{color:'black',fontweight:'600',borderColor:'white'}} >
+        Ingresar
+      </Button>
+        </Link >
+        <Link to='/register'style={{ textDecoration: "none" }}>
+      <Button variant="outlined"  style={{color:'black',fontweight:'600',borderColor:'white'}}>
+        Registrate
+      </Button>
+        </Link>
+    </Stack>
+      }
     </Menu>
   );
 
@@ -157,8 +183,9 @@ export default function PrimarySearchAppBar() {
     <Box sx={{ flexGrow: 1 }} >
       <AppBar position="static"style={{backgroundColor:'#006400'}}>
         <Toolbar>
-          <Typography variant="h6" noWrap component="div">
-            ERBI LODA
+            <img src={logo} style={{width:'40px',height:'40px',marginRight:'1rem'}} alt=""/>
+          <Typography variant="h6" noWrap component="div" sx={{ display: { xs: "none", md: "flex" } }} >
+            Erbi Loda
           </Typography>
           <Search>
             <SearchIconWrapper>
@@ -167,15 +194,17 @@ export default function PrimarySearchAppBar() {
             <StyledInputBase
               placeholder="Search…"
               inputProps={{ "aria-label": "search" }}
-            />
+              />
           </Search>
           <Box sx={{ flexGrow: 1 }} />
+          {(myDecodedToken+''!== 'null')?
+              <>
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
             <IconButton
               size="large"
               aria-label="show 4 new mails"
               color="inherit"
-            >
+              >
               <Badge badgeContent={0} color="error">
                 <MailIcon />
               </Badge>
@@ -184,7 +213,7 @@ export default function PrimarySearchAppBar() {
               size="large"
               aria-label="show 17 new notifications"
               color="inherit"
-            >
+              >
               <Badge badgeContent={0} color="error">
                 <NotificationsIcon />
               </Badge>
@@ -197,7 +226,7 @@ export default function PrimarySearchAppBar() {
               aria-haspopup="true"
               onClick={handleProfileMenuOpen}
               color="inherit"
-            >
+              >
               <AccountCircle />
             </IconButton>
           </Box>
@@ -209,10 +238,42 @@ export default function PrimarySearchAppBar() {
               aria-haspopup="true"
               onClick={handleMobileMenuOpen}
               color="inherit"
-            >
+              >
               <MoreIcon />
             </IconButton>
           </Box>
+            </>
+          :
+          <>
+          <Box sx={{ display: { xs: "none", md: "flex" } }}>
+          <Stack direction="row" spacing={2}>
+            <Link  to='/login'style={{ textDecoration: "none" }}>
+      <Button variant="outlined" style={{color:'white',fontweight:'600',borderColor:'white'}} >
+        Ingresar
+      </Button>
+            </Link>
+            <Link  to='/register'style={{ textDecoration: "none" }}>
+      <Button variant="outlined"  style={{color:'white',fontweight:'600',borderColor:'white'}}>
+        registrarse
+      </Button>
+            </Link>
+    </Stack>
+          </Box>
+          <Box sx={{ display: { xs: "flex", md: "none" } }}>
+            <IconButton
+              size="large"
+              aria-label="show more"
+              aria-controls={mobileMenuId}
+              aria-haspopup="true"
+              onClick={handleMobileMenuOpen}
+              color="inherit"
+              >
+              <MoreIcon />
+            </IconButton>
+          </Box>
+          
+            </>
+            }
         </Toolbar>
       </AppBar>
       {renderMobileMenu}
