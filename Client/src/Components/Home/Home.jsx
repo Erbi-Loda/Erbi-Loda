@@ -3,7 +3,6 @@ import Card from "../Card/Card";
 import { useEffect, useState } from "react";
 import './Home.style.css'
 import Carrousel from "../Carrousel/Carrousel";
-import Footer from "../Footer/footer";
 import Loading from "../Loading2/Loading";
 
 export default function Home() {
@@ -108,21 +107,21 @@ export default function Home() {
   llamadoproducts()
  },[])
   const [toShow,setToShow] = useState([
-    {
-      title:"Diapositiva 1",
-      img:"https://www.sabervivirtv.com/medio/2022/06/09/6-beneficios-del-cafe-para-tu-salud-que-quiza-no-conozcas_532ab4fd_1280x720.jpg",
-      description:"Esta es la descripcion del elemento 1",
-    },
+    // {
+    //   title:"Diapositiva 1",
+    //   img:"https://www.sabervivirtv.com/medio/2022/06/09/6-beneficios-del-cafe-para-tu-salud-que-quiza-no-conozcas_532ab4fd_1280x720.jpg",
+    //   description:"Esta es la descripcion del elemento 1",
+    // },
     {
       title:"Diapositiva 2",
       img:"https://www.hogarmania.com/archivos/201301/cafe-formas-de-preparar-xl-668x400x80xX.jpg",
       description:"Esta es la descripcion del elemento 2",
     },
-    {
-      title:"Diapositiva 3",
-      img:"https://ichef.bbci.co.uk/news/640/cpsprodpb/76B0/production/_105848303_gettyimages-996540050.jpg",
-      description:"Esta es la descripcion del elemento 3",
-    }
+    // {
+    //   title:"Diapositiva 3",
+    //   img:"https://ichef.bbci.co.uk/news/640/cpsprodpb/76B0/production/_105848303_gettyimages-996540050.jpg",
+    //   description:"Esta es la descripcion del elemento 3",
+    // }
   ])
 
   return (
@@ -141,7 +140,6 @@ export default function Home() {
         })}
         </div>
       </div>
-      <Footer/>
     </div>
   );
 }
