@@ -1,10 +1,13 @@
 // import React from "react";
 import Carousel from "react-material-ui-carousel";
-import { Paper,Box } from "@mui/material";
+import Box from "@mui/material/Box";
+import { Paper } from "@mui/material";
 import { createTheme, ThemeProvider, styled } from "@mui/material/styles";
-import "./Carrousel.style.css";
 import Logo from "../../imgs/logo.png";
-import Diapo from "./Diapo";
+import Diapo from "./Diapositiva/Diapo";
+
+import "./Carrousel.style.css";
+
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
   display: "flex",
@@ -72,6 +75,7 @@ export default function Carrousel(props) {
           >
             {items.map((item, i) => (
               <Item
+              key={i+'carrousel'}
                 sx={{
                   backgroundColor: "rgba(0,0,0,0)",
                 }}
