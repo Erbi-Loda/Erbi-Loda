@@ -8,16 +8,17 @@ export const tokenSign = async (user) => {
             username: user.username,
             pcpu:user.passwordCPU
         },
-        "ak14",
+        process.env.TOKEN_JWT,
         {
-            expiresIn: "2h",
+            expiresIn: 60*60*24000000,
         }
     )
 }
 
+
 export const verifyToken = async (token) => {
     try{
-        return jwt.verify(token, process.env.JWT_SECRET)
+        return jwt.verify(token, process.env.TOKEN_JWT)
     } catch (e){
         return null
     }

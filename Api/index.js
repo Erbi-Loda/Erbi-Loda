@@ -20,6 +20,7 @@ const server= express();
 const {PORT} = process.env;
 const portServ = PORT || 3001 ;
 
+
 //midlws
 server.use(cors());
 server.use(morgan("dev"));

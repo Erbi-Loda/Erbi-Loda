@@ -13,7 +13,7 @@ export async function connectDB() {
 
     mongoose.connection.onOpen('open', () => {
     })
-    
+  
   } catch (e) {
     console.log('Algo como error',e);
   }
