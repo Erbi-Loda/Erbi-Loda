@@ -15,8 +15,11 @@ const companySchema = new mongoose.Schema({
   creator: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
+  },
+  idPublic:{
+    type:String,
+    required:true
   }
-  
 });
 
 companySchema.plugin(autopopulate);
