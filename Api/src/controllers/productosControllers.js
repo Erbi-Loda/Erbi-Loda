@@ -63,7 +63,18 @@ export const getDetailProduct = async (req, res) => {
     user.historial = historialCopiado;
     await user.save();
 
-    console.log({ historialCopiado });
+  }
+  if (user) {
+    let historialCopiadoinfinito = user.historialInfinito;
+    if (historialCopiadoinfinito.some((e) => e.toString() === req.params.id)) {
+      historialCopiadoinfinito = historialCopiadoinfinito.filter(
+        (e) => e.toString() !== req.params.id
+      );
+    }
+    historialCopiadoinfinito.unshift(producto._id);
+    user.historialInfinito = historialCopiadoinfinito;
+    await user.save();
+
   }
 
   res.send(producto);

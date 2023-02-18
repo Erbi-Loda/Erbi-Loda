@@ -22,6 +22,12 @@ const userSchema = new mongoose.Schema({
       ref: "Productos",
     },
   ],
+  historialInfinito: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Productos",
+    },
+  ],
   compras: [{
     productoname: {
       type: String,
