@@ -13,9 +13,14 @@ const userSchema = new mongoose.Schema({
     required: true,
   },
   idPublic: {
-    type: String,
-    required: true,
+    type: String
   },
+  favorito: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Productos",
+    },
+  ],
   historial: [
     {
       type: mongoose.Schema.Types.ObjectId,

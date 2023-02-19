@@ -55,3 +55,58 @@ export const getUser = async (req, res) => {
         return res.status(404).send({ msg: `Error - ${e}` })
     }
 }
+
+export const getHistorialUser = async (req,res)=>{    
+    const  id  = req.user._id
+    try {
+        const user = await User.findById(id)
+        if(!user) {
+            return res.status(405).send("Usuario no encontrado")
+        }
+        return res.status(200).json({historial:user.historial})
+    } catch(e) {
+        return res.status(404).send({ msg: `Error - ${e}` })
+    }
+}
+export const getHistorialInfinitoUser = async (req,res)=>{    
+    const  id  = req.user._id
+    try {
+        const user = await User.findById(id)
+        if(!user) {
+            return res.status(405).send("Usuario no encontrado")
+        }
+        return res.status(200).json({historialInfinito:user.historialInfinito})
+    } catch(e) {
+        return res.status(404).send({ msg: `Error - ${e}` })
+    }
+}
+export const getFavoritoUser = async (req,res)=>{    
+    const  id  = req.user._id
+    console.log('limit',req.query.limit)
+    try {
+        const user = await User.findById(id)
+        if(!user) {
+            return res.status(405).send("Usuario no encontrado")
+        }
+        return res.status(200).json(req.query.limit?{favoritos:user.favorito.slice(0,req.query.limit)}:{favoritos:user.favorito})
+    } catch(e) {
+        return res.status(404).send({ msg: `Error - ${e}` })
+    }
+}
+export const putFavoritoUser = async (req,res)=>{    
+    const  id  = req.user._id
+    try {
+        const user = await User.findById(id)
+        if(!user) {
+            return res.status(405).send("Usuario no encontrado")
+        }
+        let favorito = user.favorito
+       if(favorito.some(e=>e.toString()===req.body.producto)) {favorito=favorito.filter(e=>e.toString()!==req.body.producto)}
+       else{favorito.unshift(req.body.producto)}
+       user.favorito=favorito
+       await user.save()
+        return res.status(200).json({favorito:user.favorito})
+    } catch(e) {
+        return res.status(404).send({ msg: `Error - ${e}` })
+    }
+}
