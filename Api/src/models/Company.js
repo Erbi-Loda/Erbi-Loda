@@ -17,8 +17,7 @@ const companySchema = new mongoose.Schema({
     ref: "User",
   },
   idPublic:{
-    type:String,
-    required:true
+    type:String
   }
 });
 

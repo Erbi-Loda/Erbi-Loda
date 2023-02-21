@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-
+import autopopulate from "mongoose-autopopulate";
 const userSchema = new mongoose.Schema({
   username: {
     type: String,
@@ -19,18 +19,14 @@ const userSchema = new mongoose.Schema({
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Productos",
-    },
-  ],
-  historial: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Productos",
+      autopopulate: true,
     },
   ],
   historialInfinito: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Productos",
+      autopopulate: true,
     },
   ],
   compras: [{
@@ -85,6 +81,7 @@ const userSchema = new mongoose.Schema({
     Product:{
       type: mongoose.Schema.Types.ObjectId,
       ref: "Productos",
+      autopopulate: true,
     }
   }],
   companies: [
@@ -95,5 +92,5 @@ const userSchema = new mongoose.Schema({
     },
   ],
 });
-
+userSchema.plugin(autopopulate);
 export default mongoose.model("User", userSchema);

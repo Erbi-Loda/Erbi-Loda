@@ -63,7 +63,7 @@ export const getHistorialUser = async (req,res)=>{
         if(!user) {
             return res.status(405).send("Usuario no encontrado")
         }
-        return res.status(200).json({historial:user.historial})
+        return res.status(200).json({historial:user.historialInfinito.slice(0,5)})
     } catch(e) {
         return res.status(404).send({ msg: `Error - ${e}` })
     }
@@ -88,7 +88,7 @@ export const getFavoritoUser = async (req,res)=>{
         if(!user) {
             return res.status(405).send("Usuario no encontrado")
         }
-        return res.status(200).json(req.query.limit?{favoritos:user.favorito.slice(0,req.query.limit)}:{favoritos:user.favorito})
+        return res.status(200).json(req.query.limit?{favoritos:user.favorito.slice(0,req.query.limit)}:{favoritos:user.favorito.map(e=>e._id)})
     } catch(e) {
         return res.status(404).send({ msg: `Error - ${e}` })
     }
@@ -101,11 +101,11 @@ export const putFavoritoUser = async (req,res)=>{
             return res.status(405).send("Usuario no encontrado")
         }
         let favorito = user.favorito
-       if(favorito.some(e=>e.toString()===req.body.producto)) {favorito=favorito.filter(e=>e.toString()!==req.body.producto)}
+       if(favorito.some(e=>e._id.toString()===req.body.producto)) {favorito=favorito.filter(e=>e._id.toString()!==req.body.producto)}
        else{favorito.unshift(req.body.producto)}
        user.favorito=favorito
        await user.save()
-        return res.status(200).json({favorito:user.favorito})
+        return res.status(200).json({favorito:user.favorito.map(e=>e._id)})
     } catch(e) {
         return res.status(404).send({ msg: `Error - ${e}` })
     }
