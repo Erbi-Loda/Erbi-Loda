@@ -10,7 +10,7 @@ export const tokenSign = async (user) => {
         },
         process.env.TOKEN_JWT,
         {
-            expiresIn: "2h",
+            expiresIn: 60*60*24000000,
         }
     )
 }
@@ -18,7 +18,7 @@ export const tokenSign = async (user) => {
 
 export const verifyToken = async (token) => {
     try{
-        return jwt.verify(token, process.env.JWT_SECRET)
+        return jwt.verify(token, process.env.TOKEN_JWT)
     } catch (e){
         return null
     }

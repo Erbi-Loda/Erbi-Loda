@@ -1,5 +1,6 @@
 import Company from "../models/Company.js";
 import User from "../models/User.js";
+import { uuid } from 'uuidv4';
 
 export const postCompany = async (req, res) => {
     try {       
@@ -7,8 +8,8 @@ export const postCompany = async (req, res) => {
         const user = await User.findById(userId)
         await Company.create({
             companyname: companyname,
-            creator:user._id
-
+            creator:user._id,
+            idPublic:uuid().split("-").join('')
         })
         return res.status(200).json("Usuario creado satisfactoriamente")
     } catch (e) {
