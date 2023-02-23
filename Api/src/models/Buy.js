@@ -1,35 +1,6 @@
 import mongoose from "mongoose";
-import autopopulate from "mongoose-autopopulate";
-const userSchema = new mongoose.Schema({
-  username: {
-    type: String,
-    required: true,
-  },
-  password: {
-    type: String,
-  },
-  email: {
-    type: String,
-    required: true,
-  },
-  idPublic: {
-    type: String
-  },
-  favorito: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Productos",
-      autopopulate: true,
-    },
-  ],
-  historialInfinito: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Productos",
-      autopopulate: true,
-    },
-  ],
-  compras: [{
+
+const buySchema = new mongoose.Schema({
     productoname: {
       type: String,
       required: true,
@@ -81,16 +52,19 @@ const userSchema = new mongoose.Schema({
     Product:{
       type: mongoose.Schema.Types.ObjectId,
       ref: "Productos",
-      autopopulate: true,
-    }
-  }],
-  companies: [
-    {
+    },
+    fecha:{
+      type:String,
+      required:true
+    },
+    company:{
       type: mongoose.Schema.Types.ObjectId,
       ref: "Company",
-      autopopulate: true,
     },
-  ],
+    address:{
+      type:String,
+      required:true
+    }
 });
-userSchema.plugin(autopopulate);
-export default mongoose.model("User", userSchema);
+
+export default mongoose.model("Buy", buySchema);

@@ -34,6 +34,7 @@ export const postProducto = async (req, res) => {
     await company.save();
     return res.json(savedProducto);
   } catch (e) {
+    console.log(e)
     return res.status(400).json({ msg: `Error - ${e}` });
   }
 };
@@ -48,22 +49,18 @@ export const getDetailProduct = async (req, res) => {
     views: Number(producto.views) + 1 + "",
   });
   const user = await User.findById(req.user._id);
-
   if (user) {
-    let historialCopiado = user.historial;
-    if (historialCopiado.some((e) => e.toString() === req.params.id)) {
-      historialCopiado = historialCopiado.filter(
-        (e) => e.toString() !== req.params.id
+    let historialCopiadoinfinito = user.historialInfinito;
+    if (historialCopiadoinfinito.some((e) => e._id.toString() === req.params.id)) {
+      historialCopiadoinfinito = historialCopiadoinfinito.filter(
+        (e) => e._id.toString() !== req.params.id
       );
+      console.log('entre aqui',req.params.id)
     }
-    if (user && user.historial.length === 5) {
-      historialCopiado.pop();
-    }
-    historialCopiado.unshift(producto._id);
-    user.historial = historialCopiado;
+    historialCopiadoinfinito.unshift(producto._id);
+    user.historialInfinito = historialCopiadoinfinito;
     await user.save();
 
-    console.log({ historialCopiado });
   }
 
   res.send(producto);

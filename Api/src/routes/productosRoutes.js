@@ -3,7 +3,7 @@ import { postProducto,deleteProducto,getProductos,getDetailProduct  } from "../c
 import {requireAuth,simpleAuth} from '../helpers/requireAuth.js'
 const router = Router()
 
-router.post("/company/postProduct",requireAuth, postProducto)
+router.post("/company/postProduct", postProducto)
 router.delete("/company/deleteProduct/:id",requireAuth, deleteProducto)
 router.get("/getProductos", getProductos)
 router.get("/getProducto/:id",simpleAuth, getDetailProduct )
