@@ -22,7 +22,7 @@ shortDescription: {
         required: true,
     },
     views: {
-        type: String,
+        type: Number,
         required: true,
     },
     coments: {

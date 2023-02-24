@@ -43,6 +43,16 @@ export const getProductos = async (req, res) => {
   const productos = await Productos.find();
   res.send(productos);
 };
+export const getProductosRandom=async(req,res)=>{
+  const limit = req.query.limit || 5
+  const productos2 = await Productos.aggregate([{$sample:{size:Number(limit)}},{$sort:{views:-1}}])
+  res.send(productos2)
+}
+export const getProductosFamous=async(req,res)=>{
+  const limit = req.query.limit || 5
+  const productos2 = await Productos.aggregate([{$sort:{views:-1}}]).limit(Number(limit))
+  res.send(productos2)
+}
 export const getDetailProduct = async (req, res) => {
   const producto = await Productos.findById(req.params.id);
   const producto2 = await Productos.findByIdAndUpdate(req.params.id, {
