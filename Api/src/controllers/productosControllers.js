@@ -76,7 +76,8 @@ export const getDetailProduct = async (req, res) => {
       let indexproduct =
         historialWithDate.findIndex((e) => e.producto === req.params.id) ||
         false;
-      if (indexproduct > -1) {
+        console.log(indexproduct[indexproduct])
+      if (indexproduct && indexproduct > -1) {
         if (historialWithDate[indexproduct].date <= hoy) {
           historialWithDate.splice(indexproduct, 1);
           historialWithDate.unshift({ producto: req.params.id, date: manana });
@@ -85,7 +86,7 @@ export const getDetailProduct = async (req, res) => {
           });
         }
       }
-      if (indexproduct < 0) {
+      if (indexproduct&&indexproduct < 0) {
         historialWithDate.unshift({ producto: req.params.id, date: manana });
         const producto2 = await Productos.findByIdAndUpdate(req.params.id, {
           views: Number(producto.views) + 1 + "",
