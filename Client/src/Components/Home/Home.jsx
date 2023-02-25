@@ -1,20 +1,19 @@
 
-import NavBarComponent from "../Navbar/NavBar";
+import NavBarComponent from "../Navbar/Navbar";
 import Card from "../Card/Card";
 import { useEffect, useState } from "react";
-import Carrousel from "../Carrousel/Carrousel";
 import {useProductsStore} from '../../store/productosStore';
 // estilos
 import './Home.style.css'
-import { Link } from "react-router-dom";
 import CarouselBoostrap from "./Carousel-Boostrap/Carousel";
 
 export default function Home() {
-  const {product,getProducts,favorite,getfavorite}= useProductsStore()
+  const {getProductsRandom,getProducts,favorite,getfavorite,putFavorite,productsPopulate,productsRandom,getProductsPopulate}= useProductsStore()
   
  useEffect(()=>{
   getProducts()
   getfavorite()
+  getProductsRandom()
  },[])
   const [toShow,setToShow] = useState([
     // {
@@ -48,11 +47,11 @@ export default function Home() {
   }
 useEffect(()=>{
   if(localStorage.getItem('userloda'))pedirHistorial()
+  getProductsPopulate()
 },[])
   return (
     <div className="containerHome">
       <NavBarComponent></NavBarComponent>
-      {/* //<Carrousel toShow={toShow}></Carrousel> */}
       <CarouselBoostrap></CarouselBoostrap>
       <div className="container-container-cards">
 
@@ -61,21 +60,42 @@ useEffect(()=>{
         return(
           <div key={product._id}>
           {index===0&&<h4 className="titulo-cards">Historial:</h4>}
-          <Card key={product._id}favorite={favorite?favorite.some(e=>e===product._id):false}   id={product._id} name={product.productname} shDesc={product.shortDescription} price={product.price}img={product.img[0]} />
+          <Card key={product._id}favorite={favorite?favorite.some(e=>e===product._id):false} putFavorite={putFavorite}  id={product._id} name={product.productname} shDesc={product.shortDescription} price={product.price}img={product.img[0]} />
           </div>
           )
         })}
         </div>
-            <div className="container-cards">
-      {product&&product.map((product,index)=>{
+        <div className="container-cards">
+      {productsPopulate&&productsPopulate.map((product,index)=>{
+        console.log(productsPopulate)
+        return(
+          <div key={product._id}>
+          {index===0&&<h4 className="titulo-cards">Populares:</h4>}
+          <Card key={product._id}favorite={favorite?favorite.some(e=>e===product._id):false} putFavorite={putFavorite}  id={product._id} name={product.productname} shDesc={product.shortDescription} price={product.price}img={product.img[0]} />
+          </div>
+          )
+        })}
+        </div>
+        <div className="container-cards">
+      {productsRandom&&productsRandom.map((product,index)=>{
+        return(
+          <div key={product._id}>
+          {index===0&&<h4 className="titulo-cards">Random:</h4>}
+          <Card key={product._id}favorite={favorite?favorite.some(e=>e===product._id):false} putFavorite={putFavorite}  id={product._id} name={product.productname} shDesc={product.shortDescription} price={product.price}img={product.img[0]} />
+          </div>
+          )
+        })}
+        </div>
+           {/* <div className="container-cards">
+       {product&&product.map((product,index)=>{
         return(
           <div key={product._id}>
           {index===0&&<h4 className="titulo-cards">Productos:</h4>}
-          <Card key={product._id}favorite={favorite?favorite.some(e=>e===product._id):false}  id={product._id} name={product.productname} shDesc={product.shortDescription} price={product.price} img={product.img[0]}/>
+          <Card key={product._id}favorite={favorite?favorite.some(e=>e===product._id):false} putFavorite={putFavorite} id={product._id} name={product.productname} shDesc={product.shortDescription} price={product.price} img={product.img[0]}/>
           </div>
           )
-        })}
-        </div>
+        })} 
+        </div>*/}
       </div>
     </div>
   );
