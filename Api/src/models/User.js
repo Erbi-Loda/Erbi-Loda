@@ -29,6 +29,11 @@ const userSchema = new mongoose.Schema({
       autopopulate: true,
     },
   ],
+  historialWithDate:[
+    {
+      type:Object
+    }
+  ],
   compras: [{
     productoname: {
       type: String,
