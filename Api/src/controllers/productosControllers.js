@@ -56,9 +56,11 @@ export const getProductosFamous = async (req, res) => {
     { $sort: { views: -1 } },
   ]).limit(Number(limit));
   res.send(productos2);
+  console.log('hola')
 };
 export const getDetailProduct = async (req, res) => {
-  const producto = await Productos.findById(req.params.id);
+  const producto = await Productos.findById(req.params.id);  
+  res.send(producto);
   const user = await User.findById(req.user._id);
   if (user) {
     let historialCopiadoinfinito = user.historialInfinito;
@@ -76,7 +78,6 @@ export const getDetailProduct = async (req, res) => {
       let indexproduct =
         historialWithDate.findIndex((e) => e.producto === req.params.id) ||
         false;
-        console.log(indexproduct[indexproduct])
       if (indexproduct && indexproduct > -1) {
         if (historialWithDate[indexproduct].date <= hoy) {
           historialWithDate.splice(indexproduct, 1);
@@ -99,7 +100,6 @@ export const getDetailProduct = async (req, res) => {
     await user.save();
   }
 
-  res.send(producto);
 };
 export const deleteProducto = async (req, res) => {
   const { id } = req.params;
