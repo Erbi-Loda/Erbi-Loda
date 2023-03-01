@@ -1,7 +1,7 @@
 import Productos from "../models/Productos.js";
 import Company from "../models/Company.js";
 import User from "../models/User.js";
-const {mercadopago}= require('../utils/mercadoPago');
+// import {mercadopago} from '../utils/mercadoPago.js';
 
 
 export const postProducto = async (req, res) => {
