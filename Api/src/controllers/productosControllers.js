@@ -1,6 +1,8 @@
 import Productos from "../models/Productos.js";
 import Company from "../models/Company.js";
 import User from "../models/User.js";
+const {mercadopago}= require('../utils/mercadoPago');
+
 
 export const postProducto = async (req, res) => {
   try {
@@ -40,6 +42,7 @@ export const postProducto = async (req, res) => {
 
 export const getProductos = async (req, res) => {
   const productos = await Productos.find();
+  console.log(productos)
   res.send(productos);
 };
 export const getProductosRandom = async (req, res) => {
@@ -56,12 +59,17 @@ export const getProductosFamous = async (req, res) => {
     { $sort: { views: -1 } },
   ]).limit(Number(limit));
   res.send(productos2);
-  console.log('hola')
+  console.log("hola");
 };
 export const getDetailProduct = async (req, res) => {
-  const producto = await Productos.findById(req.params.id);  
+  const producto = await Productos.findById(req.params.id);
   res.send(producto);
   const user = await User.findById(req.user._id);
+
+  
+  
+  
+  
   if (user) {
     let historialCopiadoinfinito = user.historialInfinito;
     let historialWithDate = user.historialWithDate;
@@ -87,7 +95,7 @@ export const getDetailProduct = async (req, res) => {
           });
         }
       }
-      if (indexproduct&&indexproduct < 0) {
+      if (indexproduct && indexproduct < 0) {
         historialWithDate.unshift({ producto: req.params.id, date: manana });
         const producto2 = await Productos.findByIdAndUpdate(req.params.id, {
           views: Number(producto.views) + 1 + "",
@@ -109,4 +117,42 @@ export const deleteProducto = async (req, res) => {
   } catch (e) {
     return res.json({ msg: `Error - ${e}` });
   }
+};
+export const pagarProducto = async (req, res) => {
+  const categoriaBuscar = req.params.id;
+  const datos = req.body.items;
+  const producto = await Productos.findById(categoriaBuscar);
+  const user = await User.findById(req.user._id);
+  let preference = {
+    transaction_amount: parseInt(producto.price * 1.21),
+    binary_mode: true,
+    payer: {
+      name:user.name,
+      email:user.email
+    },
+    items:[
+      {
+        picture_url: datos.picture_url,
+        title: producto.title,
+        unit_price: parseInt(producto.price*1.21),
+        quantity:1,
+        description: producto.description,
+      }
+    ],
+    back_urls:{
+      "success": `http://localhost:8080/...`,
+      "failure": `http://localhost:8080/...`,
+      "pending": `http://localhost:8080/...`,
+    },
+    auto_return:  "approved",
+  };
+
+  mercadopago.preferences.create(preference).then((response)=>{
+    console.log(response)
+    res.json({
+      global: response.body.id,
+    });
+  }).catch((error)=>{
+    console.log(error);
+  })
 };
