@@ -134,7 +134,7 @@ export default function Detalle() {
                   name="half-rating"
                   style={{ fontSize: "60px" }}
                   defaultValue={3}
-                  precision={0.5}
+                  precision={'0.5'}
                   readOnly
                 />
               </div>
