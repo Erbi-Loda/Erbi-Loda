@@ -1,7 +1,75 @@
 import Productos from "../models/Productos.js";
 import Company from "../models/Company.js";
 import User from "../models/User.js";
-import mercadopago from "../utils/mercadoPago.js"
+import Compras from "../models/Compras.js";
+import ComprasCarrito from "../models/ComprasCarrito.js";
+import mercadopago from "mercadopago";
+
+mercadopago.configure({ access_token: process.env.ACCESSTOKENMERPA });
+export const pagoProducto = async (req, res) => {
+  const { productos } = req.body;
+  const user = await User.findById(req.user._id);
+  let preference = {
+    items: productos.map((e) => {
+      return {
+        id: e._id,
+        title: e.productoname,
+        currency_id: "ARS",
+        category_id: "art",
+        picture_url: e.img[0],
+        description: e.description.slice(0, 256),
+        unit_price: Number(e.price),
+        quantity: e.quantity,
+      };
+    }),
+    back_urls: {
+      success: "http://127.0.0.1:5173",
+      failure: "",
+      pending: "",
+    },
+    auto_return: "approved",
+    binary_mode: true,
+  };
+  mercadopago.preferences
+  .create(preference)
+  .then(async (response) => {
+      res.status(200).send({ response });
+      const generadorcomras = async () => {
+        let arrayCompras = [];
+        let arrayCompaniasID = [];
+        let productosger = await Promise.all(
+          productos.map(async (e) => {
+            await Compras.create({
+              producto: e,
+              fecha: new Date(),
+              comprador: user,
+              vendedor: e.companyId,
+            }).then(async (res) => {
+              arrayCompaniasID.push(e.companyId);
+              arrayCompras.push({ id: res._id, companyId: e.companyId });
+            });
+          })
+        );
+        await ComprasCarrito.create({
+          compras: arrayCompras.map((j) => j.id),
+        });
+        let h = arrayCompaniasID.filter((item, index) => {
+          return arrayCompaniasID.indexOf(item) === index;
+        });
+        h.map(async (e) => {
+          const company = await Company.findById(e);
+          company.ventas;
+          arrayCompras
+            .filter((r) => r.companyId === e)
+            .map((y) => company.ventas.push(y.id));
+          await company.save();
+        });
+        return productosger;
+      };
+      generadorcomras();
+    })
+    .catch((e) => res.status(400).send({ error: e.message }));
+};
 
 export const postProducto = async (req, res) => {
   try {
@@ -41,7 +109,7 @@ export const postProducto = async (req, res) => {
 
 export const getProductos = async (req, res) => {
   const productos = await Productos.find();
-  console.log(productos)
+  console.log(productos);
   res.send(productos);
 };
 export const getProductosRandom = async (req, res) => {
@@ -65,10 +133,6 @@ export const getDetailProduct = async (req, res) => {
   res.send(producto);
   const user = await User.findById(req.user._id);
 
-  
-  
-  
-  
   if (user) {
     let historialCopiadoinfinito = user.historialInfinito;
     let historialWithDate = user.historialWithDate;
@@ -106,7 +170,6 @@ export const getDetailProduct = async (req, res) => {
     user.historialInfinito = historialCopiadoinfinito;
     await user.save();
   }
-
 };
 export const deleteProducto = async (req, res) => {
   const { id } = req.params;
@@ -116,45 +179,4 @@ export const deleteProducto = async (req, res) => {
   } catch (e) {
     return res.json({ msg: `Error - ${e}` });
   }
-};
-export const pagarProducto = async (req, res) => {
-  const categoriaBuscar = req.params.id;
-  const datos = req.body.items;
-  const producto = await Productos.findById(categoriaBuscar);
-  // console.log(producto)
-  const user = await User.findById(req.user._id);
-  let preference = {
-    transaction_amount: parseInt(producto.price * 1.21),
-    binary_mode: true,
-    payer: {
-      name:user.name,
-      email:user.email
-    },
-    items:[
-      {
-        picture_url: producto.img[0],
-        title: producto.title,
-        unit_price: parseInt(producto.price*1.21),
-        quantity:1,
-        description: producto.description,
-      }
-    ],
-    back_urls:{
-      "success": `http://localhost:8080/...`,
-      "failure": `http://localhost:8080/...`,
-      "pending": `http://localhost:8080/...`,
-    },
-    auto_return:  "approved",
-  };
-
-  console.log(mercadopago)
-
-  mercadopago.preferences.create(preference).then((response)=>{
-    console.log(response)
-    res.json({
-      global: response.body.id,
-    });
-  }).catch((error)=>{
-    console.log(error);
-  })
 };

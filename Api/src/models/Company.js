@@ -15,7 +15,13 @@ const companySchema = new mongoose.Schema({
   creator: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
+    autopopulate: true,
   },
+  ventas:[{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Compras",
+    autopopulate: true,
+  }],
   idPublic:{
     type:String
   }
