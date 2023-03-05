@@ -1,8 +1,7 @@
 import Productos from "../models/Productos.js";
 import Company from "../models/Company.js";
 import User from "../models/User.js";
-// import {mercadopago} from '../utils/mercadoPago.js';
-
+import mercadopago from "../utils/mercadoPago.js"
 
 export const postProducto = async (req, res) => {
   try {
@@ -122,6 +121,7 @@ export const pagarProducto = async (req, res) => {
   const categoriaBuscar = req.params.id;
   const datos = req.body.items;
   const producto = await Productos.findById(categoriaBuscar);
+  // console.log(producto)
   const user = await User.findById(req.user._id);
   let preference = {
     transaction_amount: parseInt(producto.price * 1.21),
@@ -132,7 +132,7 @@ export const pagarProducto = async (req, res) => {
     },
     items:[
       {
-        picture_url: datos.picture_url,
+        picture_url: producto.img[0],
         title: producto.title,
         unit_price: parseInt(producto.price*1.21),
         quantity:1,
@@ -146,6 +146,8 @@ export const pagarProducto = async (req, res) => {
     },
     auto_return:  "approved",
   };
+
+  console.log(mercadopago)
 
   mercadopago.preferences.create(preference).then((response)=>{
     console.log(response)
