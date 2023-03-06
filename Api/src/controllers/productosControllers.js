@@ -1,6 +1,75 @@
 import Productos from "../models/Productos.js";
 import Company from "../models/Company.js";
 import User from "../models/User.js";
+import Compras from "../models/Compras.js";
+import ComprasCarrito from "../models/ComprasCarrito.js";
+import mercadopago from "mercadopago";
+
+mercadopago.configure({ access_token: process.env.ACCESSTOKENMERPA });
+export const pagoProducto = async (req, res) => {
+  const { productos } = req.body;
+  const user = await User.findById(req.user._id);
+  let preference = {
+    items: productos.map((e) => {
+      return {
+        id: e._id,
+        title: e.productoname,
+        currency_id: "ARS",
+        category_id: "art",
+        picture_url: e.img[0],
+        description: e.description.slice(0, 256),
+        unit_price: Number(e.price),
+        quantity: e.quantity,
+      };
+    }),
+    back_urls: {
+      success: "http://127.0.0.1:5173",
+      failure: "",
+      pending: "",
+    },
+    auto_return: "approved",
+    binary_mode: true,
+  };
+  mercadopago.preferences
+  .create(preference)
+  .then(async (response) => {
+      res.status(200).send({ response });
+      const generadorcomras = async () => {
+        let arrayCompras = [];
+        let arrayCompaniasID = [];
+        let productosger = await Promise.all(
+          productos.map(async (e) => {
+            await Compras.create({
+              producto: e,
+              fecha: new Date(),
+              comprador: user,
+              vendedor: e.companyId,
+            }).then(async (res) => {
+              arrayCompaniasID.push(e.companyId);
+              arrayCompras.push({ id: res._id, companyId: e.companyId });
+            });
+          })
+        );
+        await ComprasCarrito.create({
+          compras: arrayCompras.map((j) => j.id),
+        });
+        let h = arrayCompaniasID.filter((item, index) => {
+          return arrayCompaniasID.indexOf(item) === index;
+        });
+        h.map(async (e) => {
+          const company = await Company.findById(e);
+          company.ventas;
+          arrayCompras
+            .filter((r) => r.companyId === e)
+            .map((y) => company.ventas.push(y.id));
+          await company.save();
+        });
+        return productosger;
+      };
+      generadorcomras();
+    })
+    .catch((e) => res.status(400).send({ error: e.message }));
+};
 
 export const postProducto = async (req, res) => {
   try {
@@ -40,6 +109,7 @@ export const postProducto = async (req, res) => {
 
 export const getProductos = async (req, res) => {
   const productos = await Productos.find();
+  console.log(productos);
   res.send(productos);
 };
 export const getProductosRandom = async (req, res) => {
@@ -56,12 +126,13 @@ export const getProductosFamous = async (req, res) => {
     { $sort: { views: -1 } },
   ]).limit(Number(limit));
   res.send(productos2);
-  console.log('hola')
+  console.log("hola");
 };
 export const getDetailProduct = async (req, res) => {
-  const producto = await Productos.findById(req.params.id);  
+  const producto = await Productos.findById(req.params.id);
   res.send(producto);
   const user = await User.findById(req.user._id);
+
   if (user) {
     let historialCopiadoinfinito = user.historialInfinito;
     let historialWithDate = user.historialWithDate;
@@ -87,7 +158,7 @@ export const getDetailProduct = async (req, res) => {
           });
         }
       }
-      if (indexproduct&&indexproduct < 0) {
+      if (indexproduct && indexproduct < 0) {
         historialWithDate.unshift({ producto: req.params.id, date: manana });
         const producto2 = await Productos.findByIdAndUpdate(req.params.id, {
           views: Number(producto.views) + 1 + "",
@@ -99,7 +170,6 @@ export const getDetailProduct = async (req, res) => {
     user.historialInfinito = historialCopiadoinfinito;
     await user.save();
   }
-
 };
 export const deleteProducto = async (req, res) => {
   const { id } = req.params;
