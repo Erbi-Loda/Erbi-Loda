@@ -1,5 +1,4 @@
 import nodemailer from "nodemailer";
-// import plant from "./views/plant_001";
 
 //         (para quien, que asunto, que mensaje de plantilla)
 export const sendEmail = async (emailTo,emailSub,emailPlant,emailText = "") => {
