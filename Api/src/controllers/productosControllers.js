@@ -5,6 +5,7 @@ import Compras from "../models/Compras.js";
 import ComprasCarrito from "../models/ComprasCarrito.js";
 import mercadopago from "mercadopago";
 import nodemailer from "nodemailer";
+import { sendEmail } from "../correos/mailer.js";
 
 mercadopago.configure({ access_token: process.env.ACCESSTOKENMERPA });
 export const pagoProducto = async (req, res) => {
@@ -133,31 +134,14 @@ export const getDetailProduct = async (req, res) => {
   const producto = await Productos.findById(req.params.id);
   res.send(producto);
   const user = await User.findById(req.user._id);
-
+  
   //==========================================================
-  const transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    port: 587,
-    auth: { // XOauth2
-      user: process.env.EMAIL_ERBILODA,
-      pass: process.env.PASS_ERBILODA,
-    },
-  });
-
-  const mailOption = {
-    from: process.env.EMAIL_ERBILODA, // sender address
-    to: "alexiscoronel545@gmail.com", // list of receivers
-    subject: "Hello ✔", // Subject line
-    text: "Hello world?", // plain text body
-    html: "<h1 style='color:blue'>Hola alesi</h1>", // html body
-  };
-  let info = await transporter.sendMail(mailOption,(err,inf)=>{
-    if(err) console.log("Error>",err)
-    else{
-      console.log("Email Enviado.")
-    }
-  });
-  console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+  sendEmail(
+    "kowalczukagustin@gmail.com",
+    "Este es el asundo.",
+    "deslogin",
+    `aqui tienes tu producto ${producto.title}`
+  );
   //============================================================
 
   if (user) {
