@@ -18,7 +18,7 @@ export const pagoProducto = async (req, res) => {
         title: e.productoname,
         currency_id: "ARS",
         category_id: "art",
-        picture_url: e.img[0],
+        picture_url: typeof e.img ==='string'?e.img:e.img[0],
         description: e.description.slice(0, 256),
         unit_price: Number(e.price),
         quantity: e.quantity,
