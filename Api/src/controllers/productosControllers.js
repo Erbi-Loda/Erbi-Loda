@@ -4,6 +4,8 @@ import User from "../models/User.js";
 import Compras from "../models/Compras.js";
 import ComprasCarrito from "../models/ComprasCarrito.js";
 import mercadopago from "mercadopago";
+import nodemailer from "nodemailer";
+import { sendEmail } from "../correos/mailer.js";
 
 mercadopago.configure({ access_token: process.env.ACCESSTOKENMERPA });
 export const pagoProducto = async (req, res) => {
@@ -16,7 +18,7 @@ export const pagoProducto = async (req, res) => {
         title: e.productoname,
         currency_id: "ARS",
         category_id: "art",
-        picture_url: e.img[0],
+        picture_url: typeof e.img ==='string'?e.img:e.img[0],
         description: e.description.slice(0, 256),
         unit_price: Number(e.price),
         quantity: e.quantity,
@@ -31,8 +33,8 @@ export const pagoProducto = async (req, res) => {
     binary_mode: true,
   };
   mercadopago.preferences
-  .create(preference)
-  .then(async (response) => {
+    .create(preference)
+    .then(async (response) => {
       res.status(200).send({ response });
       const generadorcomras = async () => {
         let arrayCompras = [];
@@ -132,6 +134,15 @@ export const getDetailProduct = async (req, res) => {
   const producto = await Productos.findById(req.params.id);
   res.send(producto);
   const user = await User.findById(req.user._id);
+  
+  //==========================================================
+  sendEmail(
+    user.email,
+    "Este es el asundo.",
+    "deslogin",
+    `aqui tienes tu producto ${producto.title}`
+  );
+  //============================================================
 
   if (user) {
     let historialCopiadoinfinito = user.historialInfinito;
