@@ -137,7 +137,7 @@ export const getDetailProduct = async (req, res) => {
   
   //==========================================================
   sendEmail(
-    "kowalczukagustin@gmail.com",
+    user.email,
     "Este es el asundo.",
     "deslogin",
     `aqui tienes tu producto ${producto.title}`
