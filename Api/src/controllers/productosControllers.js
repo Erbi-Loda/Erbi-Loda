@@ -136,12 +136,12 @@ export const getDetailProduct = async (req, res) => {
   const user = await User.findById(req.user._id);
   
   //==========================================================
-  sendEmail(
-    user.email,
-    "Este es el asundo.",
-    "deslogin",
-    `aqui tienes tu producto ${producto.title}`
-  );
+  // sendEmail(
+  //   user.email,
+  //   "Este es el asundo.",
+  //   "deslogin",
+  //   `aqui tienes tu producto ${producto.title}`
+  // );
   //============================================================
 
   if (user) {
@@ -191,3 +191,9 @@ export const deleteProducto = async (req, res) => {
     return res.json({ msg: `Error - ${e}` });
   }
 };
+export const buscarProductos= async(req,res)=>{
+
+  let result2= await Productos.find({$text:{$search:"tablét"}})
+
+  res.send(result2);
+}

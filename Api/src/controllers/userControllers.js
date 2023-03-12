@@ -72,6 +72,7 @@ export const getHistorialInfinitoUser = async (req,res)=>{
     const  id  = req.user._id
     try {
         const user = await User.findById(id)
+        console.log(user)
         if(!user) {
             return res.status(405).send("Usuario no encontrado")
         }
