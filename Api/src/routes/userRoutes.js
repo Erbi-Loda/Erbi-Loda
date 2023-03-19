@@ -5,7 +5,7 @@ const router = Router()
 
 router.post("/user/register", postUser)
 router.post("/user/login", loginUser)
-router.get("/user/:id", getUser)
+router.get("/user",simpleAuth, getUser)
 router.get("/gethistorialuser",simpleAuth, getHistorialUser)
 router.get("/gethistorialinfinitouser",simpleAuth, getHistorialInfinitoUser)
 router.put("/putFavoritoUser",simpleAuth, putFavoritoUser)
