@@ -54,7 +54,8 @@ export const pagoProducto = async (req, res) => {
         );
         
         productos.map(async(kkk)=>{
-           user.compras= user.compras.length>0?[...user.compras,
+          
+          user.compras= user.compras.length?[...user.compras,
           {
             productoname:kkk.productoname,
             price:kkk.price,
