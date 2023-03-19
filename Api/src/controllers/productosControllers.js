@@ -193,7 +193,10 @@ export const deleteProducto = async (req, res) => {
 };
 export const buscarProductos= async(req,res)=>{
 
-  let result2= await Productos.find({$text:{$search:"tablét"}})
+  let result2= await Productos.find({$text:{$search:req.query.busqueda}})
+  if(result2.length>0){
 
-  res.send(result2);
+   return res.json({busqueda:result2});
+  }
+  res.status(404).send("no encontrado")
 }

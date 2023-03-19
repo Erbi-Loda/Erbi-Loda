@@ -10,7 +10,7 @@ router.get("/getProducto/:id",simpleAuth, getDetailProduct )
 router.get("/getProductosrandom", getProductosRandom )
 router.get("/getProductosFamous", getProductosFamous )
 router.post("/pagoProducto",requireAuth, pagoProducto )
-router.get("/buscarProductos", buscarProductos )
+router.get("/buscarproductos", buscarProductos )
 
 export default router
  
