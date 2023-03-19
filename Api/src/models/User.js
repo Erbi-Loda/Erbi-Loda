@@ -87,6 +87,9 @@ const userSchema = new mongoose.Schema({
       type: mongoose.Schema.Types.ObjectId,
       ref: "Productos",
       autopopulate: true,
+    },
+    fecha:{
+      type:String
     }
   }],
   companies: [

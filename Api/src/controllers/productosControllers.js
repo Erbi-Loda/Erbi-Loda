@@ -52,6 +52,47 @@ export const pagoProducto = async (req, res) => {
             });
           })
         );
+        
+        productos.map(async(kkk)=>{
+           user.compras= user.compras.length>0?[...user.compras,
+          {
+            productoname:kkk.productoname,
+            price:kkk.price,
+            description:kkk.description,
+            shortDescription:kkk.shortDescription,
+            img:kkk.img[0],
+            views:kkk.views,
+            coments:kkk.coments,
+            score:kkk.score,
+            state:kkk.state,
+            stock:kkk.stock,
+            favorite:kkk.favorite,
+            companyId:kkk.companyId,
+            Product:kkk._id,
+            fecha:new Date()
+          }
+          ]
+           :[{
+            productoname:kkk.productoname,
+            price:kkk.price,
+            description:kkk.description,
+            shortDescription:kkk.shortDescription,
+            img:kkk.img,
+            views:kkk.views,
+            coments:kkk.coments,
+            score:kkk.score,
+            state:kkk.state,
+            stock:kkk.stock,
+            favorite:kkk.favorite,
+            companyId:kkk.companyId,
+            Product:kkk._id,
+            fecha:new Date()
+          }]
+          let productoStck =await Productos.findById(kkk._id)
+          productoStck.stock= Number(productoStck.stock)-1;
+          await productoStck.save()
+        })
+         await user.save()
         await ComprasCarrito.create({
           compras: arrayCompras.map((j) => j.id),
         });

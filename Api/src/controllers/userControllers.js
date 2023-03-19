@@ -1,26 +1,63 @@
 import User from "../models/User.js";
+import Message from "../models/Message.js";
 import { encrypt, compare } from "../helpers/bCrypt.js";
 import { tokenSign } from "../helpers/generadorDeToken.js";
-import { uuid } from "uuidv4";
+import { uuid } from 'uuidv4';
+
+export const addMenssage =async(req,res)=>{
+    try{
+        const {from,to,message} = req.body
+        const data = await Message.create({
+            message:{text:message},
+            users:[from,to],
+            sender:from,
+        });
+        if(data){
+            return res.json({msg:"Message addedd successfully."})
+        }
+        return res.json({msg:"Failed to add message to the data base"})
+    }catch(ex){
+        console.log(ex)
+    }
+}
+export const getAllMenssage =async(req,res)=>{
+try{
+const {from,to} = req.body
+const messages= await Message.find({
+    users:{
+        $all:[from,to]
+    }
+}).sort({updatedAt:1})
+const projectMessages= messages.map((msg)=>{
+    return{
+        fromSelf:msg.sender.toString()===from,
+        message:msg.message.text,
+    }
+})
+res.json(projectMessages)
+}catch(ex){
+    next(ex)
+}
+}
+
 
 export const postUser = async (req, res) => {
-  try {
-    const { username, password, email } = req.body;
-    const passwordHash = await encrypt(password);
-    passwordcpucreador();
-    await User.create({
-      username: username,
-      password: passwordHash,
-      email: email,
-      idPublic: uuid().split("-").join(""),
-    });
-    return res.status(200).json("Usuario creado satisfactoriamente");
-  } catch (e) {
-    console.log(req.body);
-    console.log("e", e);
-    return res.status(400).json({ msg: `Error - ${e}` });
-  }
-};
+    try {
+        const { username, password, email } = req.body
+        const passwordHash = await encrypt(password)
+        await User.create({
+            username: username,
+            password: passwordHash,
+            email: email,
+            idPublic: uuid().split('-').join('')
+        })
+        return res.status(200).json("Usuario creado satisfactoriamente")
+    } catch (e) {
+        console.log(req.body)
+        console.log("e",e)
+        return res.status(400).json({ msg: `Error - ${e}` })
+    }
+}
 
 export const loginUser = async (req, res) => {
   try {

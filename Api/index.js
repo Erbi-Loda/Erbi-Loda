@@ -38,8 +38,29 @@ app.use(express.urlencoded({ extended: true }));
 //rutas aqui
 app.use(index_router);
 
+global.onlineUsers=new Map()
+
+
+global.onlineUsers = new Map();
 io.on("connection", (socket) => {
-  console.log(`id: ${socket.id}`);
+  socket.on("send_mensage",(data)=>{
+    socket.broadcast.emit("receive_message",data)
+  })
+  global.chatSocket = socket;
+  socket.on("add-user", (userId) => {
+    onlineUsers.set(userId, socket.id);
+  });
+  
+  socket.on("send-msg", (data) => {
+    const sendUserSocket = onlineUsers.get(data.from);
+    const sendUserSocket2 = onlineUsers.get(data.to);
+    if (sendUserSocket) {
+      io.to(sendUserSocket).emit("msg-recieve", {fromSelf:true,msm:data.message});
+    }
+    if (sendUserSocket2) {
+      io.to(sendUserSocket2).emit("msg-recieve", {fromSelf:false,msm:data.message});
+    }
+  });
 });
 
 //escuchador del server/app
