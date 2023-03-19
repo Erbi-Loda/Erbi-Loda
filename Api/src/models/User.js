@@ -80,13 +80,17 @@ const userSchema = new mongoose.Schema({
       required: true,
     },
     companyId: {
-      type: String,
-      required:true
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Company",
+      autopopulate: true,
     },
     Product:{
       type: mongoose.Schema.Types.ObjectId,
       ref: "Productos",
       autopopulate: true,
+    },
+    fecha:{
+      type:String
     }
   }],
   companies: [

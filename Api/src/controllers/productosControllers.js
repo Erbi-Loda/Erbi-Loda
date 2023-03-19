@@ -52,6 +52,48 @@ export const pagoProducto = async (req, res) => {
             });
           })
         );
+        
+        productos.map(async(kkk)=>{
+          
+          user.compras= user.compras.length?[...user.compras,
+          {
+            productoname:kkk.productoname,
+            price:kkk.price,
+            description:kkk.description,
+            shortDescription:kkk.shortDescription,
+            img:kkk.img[0],
+            views:kkk.views,
+            coments:kkk.coments,
+            score:kkk.score,
+            state:kkk.state,
+            stock:kkk.stock,
+            favorite:kkk.favorite,
+            companyId:kkk.companyId,
+            Product:kkk._id,
+            fecha:new Date()
+          }
+          ]
+           :[{
+            productoname:kkk.productoname,
+            price:kkk.price,
+            description:kkk.description,
+            shortDescription:kkk.shortDescription,
+            img:kkk.img,
+            views:kkk.views,
+            coments:kkk.coments,
+            score:kkk.score,
+            state:kkk.state,
+            stock:kkk.stock,
+            favorite:kkk.favorite,
+            companyId:kkk.companyId,
+            Product:kkk._id,
+            fecha:new Date()
+          }]
+          let productoStck =await Productos.findById(kkk._id)
+          productoStck.stock= Number(productoStck.stock)-1;
+          await productoStck.save()
+        })
+         await user.save()
         await ComprasCarrito.create({
           compras: arrayCompras.map((j) => j.id),
         });
@@ -193,7 +235,10 @@ export const deleteProducto = async (req, res) => {
 };
 export const buscarProductos= async(req,res)=>{
 
-  let result2= await Productos.find({$text:{$search:"tablét"}})
+  let result2= await Productos.find({$text:{$search:req.query.busqueda}})
+  if(result2.length>0){
 
-  res.send(result2);
+   return res.json({busqueda:result2});
+  }
+  res.status(404).send("no encontrado")
 }
