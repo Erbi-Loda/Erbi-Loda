@@ -49,7 +49,6 @@ shortDescription: {
     companyId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Company',
-        autopopulate: true
       }
 })
 export default mongoose.model('Productos', productosSchema)

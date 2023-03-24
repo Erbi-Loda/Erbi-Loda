@@ -153,7 +153,6 @@ export const postProducto = async (req, res) => {
 
 export const getProductos = async (req, res) => {
   const productos = await Productos.find();
-  console.log(productos);
   res.send(productos);
 };
 export const getProductosRandom = async (req, res) => {
@@ -170,7 +169,6 @@ export const getProductosFamous = async (req, res) => {
     { $sort: { views: -1 } },
   ]).limit(Number(limit));
   res.send(productos2);
-  console.log("hola");
 };
 export const getDetailProduct = async (req, res) => {
   const producto = await Productos.findById(req.params.id);

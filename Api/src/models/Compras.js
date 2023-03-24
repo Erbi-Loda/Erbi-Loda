@@ -17,7 +17,6 @@ const comprasSchema = new mongoose.Schema({
   vendedor:{
     type: mongoose.Schema.Types.ObjectId,
     ref: "Company",
-    autopopulate: true,
   },
 });
 export default mongoose.model("Compras", comprasSchema);
